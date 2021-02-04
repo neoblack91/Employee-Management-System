@@ -82,11 +82,23 @@ getAllDepartments();
   .prompt([
 
     { 
-      type: "list",
-      name: "addthings",
-      message: "What would you like to add?",
-      choices:["Department", "Role", "Employee","Nothing" ]
+      type: "input",
+      name: "addname",
+      message: "Who are you adding?",
+      
      },
+     { 
+      type: "input",
+      name: "addsdepartment",
+      message: "What department are they in?",
+      
+     },
+     { 
+      type: "input",
+      name: "addrole",
+      message: "What is their Role?",
+      },
+
   ]).then ((response)=>{
     switch (response.yourchoice) {
       case Department:

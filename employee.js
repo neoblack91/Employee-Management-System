@@ -1,12 +1,12 @@
 const connect = require('./connectmysql');
 const inquirer = require('inquirer')
 const cTable = require('console.table');
-const figlet =  reqiure("figlet")
+const figlet = require("figlet")
 
 // connect to my sql
 connect.connect((error)=>{
   if (error) throw error;
-  console.log ("yay it work"+ connect.threadId)
+  // console.log ("yay it work"+ connect.threadId)
   connect.end();
 })
 
@@ -23,19 +23,19 @@ connect.connect((error)=>{
 function getAllDepartments() {
   connect.query("select * from department", function (err, res) {
     if (err) throw err;
-    console.table(res);
+    // console.table(res);
   });
 }
 function getAllRoles() {
   connect.query("select * from role", function (err, res) {
     if (err) throw err;
-    console.table(res);
+    // console.table(res);
   });
 }
 function getAllEmployee() {
   connect.query("select * from employee", function (err, res) {
     if (err) throw err;
-    console.table(res);
+    // console.table(res);
   });
 }
 
@@ -43,17 +43,18 @@ getAllRoles();
 getAllEmployee();
 getAllDepartments();
 
-const questions = []
+ const questions = function (){
+   inquirer
+   .prompt([
 
- function questions (){
-   inquirer.prompt([
     { 
-    type: "input",
+    type: "list",
     name: "yourchoice",
     message: "What would you like to do?",
-    choices:["Add", "View", "Update","Delete" ]
+    choices:["Add", "View", "Update","Delete"]
     },
    ])
+
    .then((response)=>{
 
     switch  (response.yourchoice){
@@ -73,14 +74,15 @@ const questions = []
 
           return Deletestuff()
     }
-   }
- }   
+   })
+  }   
   
  const Addstuff = () => {
-  inquirer.prompt([
+  inquirer
+  .prompt([
 
     { 
-      type: "input",
+      type: "list",
       name: "addthings",
       message: "What would you like to add?",
       choices:["Department", "Role", "Employee","Nothing" ]
@@ -97,7 +99,7 @@ const questions = []
       return
 
     }
-  }
+  })
 
  }
 
@@ -105,7 +107,7 @@ const questions = []
 
   inquirer.prompt([
     { 
-      type: "input",
+      type: "list",
       name: "viewthings",
       message: "What would you like to View?",
       choices:["Department", "Role", "Employee","Nothing" ]
@@ -126,14 +128,14 @@ const questions = []
         case Nothing :
         return Exit
     }
-  }
+  })
  }
 
  const Updatestuff = () => {
 
   inquirer.prompt([
     { 
-      type: "input",
+      type: "list",
       name: "updatethings",
       message: "What would you like to update?",
       choices:["Department", "Role", "Employee","Nothing" ]
@@ -153,5 +155,6 @@ const questions = []
   ])
  }
   
+questions()
 
 

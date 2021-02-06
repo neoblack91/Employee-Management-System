@@ -24,6 +24,7 @@ function getAllDepartments() {
   connect.query("select * from department", function (err, res) {
     if (err) throw err;
     console.table(res);
+    MainMenu ()
   });
 }
 function getAllRoles() {
@@ -31,11 +32,13 @@ function getAllRoles() {
     if (err) throw err;
      console.table(res);
   });
+  MainMenu ()
 }
 function getAllEmployee() {
   connect.query("select * from employee", function (err, res) {
     if (err) throw err;
      console.table(res);
+     MainMenu ()
   });
 }
 
@@ -51,7 +54,7 @@ function getAllEmployee() {
     type: "list",
     name: "yourchoice",
     message: "What would you like to do?",
-    choices:["Add", "View", "Edit Employee","Delete"]
+    choices:["Add", "View", "Edit Employee","Add Department","Delete"]
     },
    ])
 
@@ -59,7 +62,6 @@ function getAllEmployee() {
 
     switch  (response.yourchoice){
       case "Add":
-        
         return Addstuff()
 
         case "View" :
@@ -74,16 +76,31 @@ function getAllEmployee() {
 
         return Employeestuff()
 
+        case "Add Department" :
+
+        return DepartmentStuff ()
+
+
 
     }
    })
   }   
   
  const Addstuff = () => {
+  connect.query("SELECT *FROM department", function (err, res){
+    if (err) throw err
+    var deResult = res
+     var deChoice = deResult.map((seeDEP)=>{
+      return seeDEP.
+     
+    })  
+  })
+ 
+    
   inquirer
   .prompt([
 
-    { 
+      { 
       type: "input",
       name: "addname",
       message: "Who are you adding?",
@@ -93,16 +110,16 @@ function getAllEmployee() {
       type: "list",
       name: "adddepartment",
       message: "What department are they in?",
-      choices: ["HR","Sales","IT"]
-      
-     },
+      choices: seeDEP
+    },
      { 
       type: "input",
       name: "addrole",
       message: "What is their Role?",
       choices: ["Customer Service","Computer Tech"]
-
       },
+    
+
 
   ]).then ((response)=>{
     const employee= new employee(
@@ -136,6 +153,7 @@ function getAllEmployee() {
 
         case "Employee" :
           return getAllEmployee ()
+          
 
         default:
         return MainMenu ()
@@ -143,53 +161,79 @@ function getAllEmployee() {
   })
  }
 
+ 
 const Employeestuff = () => {
   connect.query("SELECT *FROM employee", function (err, res){
     if (err) throw err
-    
-    
-  })
-
+    var employResult = res
+     var employChoice = employResult.map((seeEmploy)=>{
+      return seeEmploy.first_name 
+      
+     }) 
+  
     inquirer.prompt([
       { 
         type: "list",
-        name: "viewthings",
+        name: "employeethings",
         message: "Who would you like to edit?",
-        choices: res
+        choices: employChoice
       },
     ])
-    // .then ((response)=>({
+    .then ((response)=>{
+
       
-    //   inquirer.prompt([
-    //     { 
-    //       type: "list",
-    //       name: "viewthings",
-    //       message: "Which do you want edit?",
-    //       choices:["Department","Roles"]
-    //      },
-    //   ])
-
-
-    // })
     
-   }
-  
+      
+      // inquirer.prompt([
+      //   { 
+      //     type: "list",
+      //     name: "viewthings",
+      //     message: "Which do you want edit?",
+      //     choices:["Department","Roles"]
+      //    },
+      // ])
+      
+    })
 
+    })
+  } 
 
+  // function confirmString(input) {
+  //   if ((input.trim() != "") && (input.trim().length <= 30)) {
+  //       return true;
+  //   }
+  //   return "Invalid input. Please limit your input to 30 characters or less."
+  // };
+   const DepartmentStuff = () => {
 
+    inquirer.prompt([
+      {
+        type: "input",
+          name: "departName",
+          message: "Enter new department:",
+        // validate: confirmString
+      }
+  ]).then(response => {
+      connect.query("INSERT INTO department (name) VALUES (?)", [response.departName]);
+      console.log(`${response.departName} was added to departments.`);
+      // MainMenu(); // this is back to the main menu
+  })
+  };
+      
+     
 
-// //  const Deletestuff = () => {
+//  const Deletestuff = () => {
 
-// //   inquirer.prompt([
+//   inquirer.prompt([
 
-// //     { 
-// //       type: "input",
-// //       name: "deletethings",
-// //       message: "What would you like to delete?",
-// //       choices:["Department", "Role", "Employee","Nothing" ]
-// //      },
-// //   ])
-// //  }
+//     { 
+//       type: "input",
+//       name: "deletethings",
+//       message: "What would you like to delete?",
+//       choices:["Department", "Role", "Employee","Nothing" ]
+//      },
+//   ])
+//  }
 
 //    getAllEmployee
 

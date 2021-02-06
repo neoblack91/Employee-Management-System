@@ -122,7 +122,7 @@ function getAllEmployee() {
       type: "list",
       name: "viewthings",
       message: "What would you like to View?",
-      choices:["Department", "Role", "Employee","Nothing" ]
+      choices:["Department", "Role", "Employee","Main Menu" ]
      },
   ]).then ((response)=>{
 
@@ -137,42 +137,42 @@ function getAllEmployee() {
         case "Employee" :
           return getAllEmployee ()
 
-        case "Nothing" :
-        return Exit ()
+        default:
+        return MainMenu ()
     }
   })
  }
 
-// const Employeestuff = () => {
-//   connect.query("SELECT *FROM employee", function (err, res){
-//     if (err) throw err
-//     return res
+const Employeestuff = () => {
+  connect.query("SELECT *FROM employee", function (err, res){
+    if (err) throw err
     
-//   })
+    
+  })
 
-//     inquirer.prompt([
-//       { 
-//         type: "list",
-//         name: "viewthings",
-//         message: "Who would you like to edit?",
-//         choices: res
-//       },
-//     ])
-//     .then ((response)=>({
+    inquirer.prompt([
+      { 
+        type: "list",
+        name: "viewthings",
+        message: "Who would you like to edit?",
+        choices: res
+      },
+    ])
+    // .then ((response)=>({
       
-//       inquirer.prompt([
-//         { 
-//           type: "list",
-//           name: "viewthings",
-//           message: "Which do you want edit?",
-//           choices:["Department","Roles"]
-//          },
-//       ])
+    //   inquirer.prompt([
+    //     { 
+    //       type: "list",
+    //       name: "viewthings",
+    //       message: "Which do you want edit?",
+    //       choices:["Department","Roles"]
+    //      },
+    //   ])
 
 
-//     })
+    // })
     
-//    }
+   }
   
 
 
@@ -194,7 +194,7 @@ function getAllEmployee() {
 //    getAllEmployee
 
 
-//   // const exit =() => {return questions}
+MainMenu = () => {return questions()};
 questions()
 
 

@@ -89,7 +89,7 @@ getAllDepartments();
      },
      { 
       type: "input",
-      name: "addsdepartment",
+      name: "adddepartment",
       message: "What department are they in?",
       
      },
@@ -100,19 +100,14 @@ getAllDepartments();
       },
 
   ]).then ((response)=>{
-    switch (response.yourchoice) {
-      case Department:
-        return
-       
-      case Role:
-      return
+    const employee= new employee(
+      response.addname,
+      response.adddepartment,
+      response.addrole
+    ) 
+    employee.push(employee)
 
-      case Employee:
-      return
-
-    }
-  })
-
+ })
  }
 
  const Viewstuff = () => {
@@ -166,7 +161,7 @@ getAllDepartments();
      },
   ])
  }
-  
+  const exit =() => {return questions}
 questions()
 
 

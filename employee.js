@@ -10,7 +10,7 @@ connect.connect((error)=>{
   // connect.end();
 })
 
-// figlet('Employee Management', function(err, data) {
+// figlet('Welcome Employee', function(err, data) {
 //   if (errot) {
 //       console.log('Something went wrong...');
 //       console.dir(error);
@@ -24,10 +24,10 @@ function getAllDepartments() {
   connect.query("select * from department", function (err, res) {
     if (err) throw err;
     console.table(res);
-    // var deResult = res
-    //  var departChoice = deResult.map((seeDEP)=>{
-    //   return seeDEP.name
-    //  }) 
+    var deResult = res
+     var departChoice = deResult.map((seeDEP)=>{
+      return seeDEP.name
+     }) 
     MainMenu ()
   });
 }
@@ -55,7 +55,7 @@ function getAllEmployee() {
     type: "list",
     name: "yourchoice",
     message: "What would you like to do?",
-    choices:["Add", "View", "Edit Employee","Add Department","Delete"]
+    choices:["Add", "View", "Edit Employee","Add Department","Delete", "Exit"]
     },
    ])
 
@@ -81,8 +81,9 @@ function getAllEmployee() {
 
         return DepartmentStuff ()
 
-
-
+      default:
+        return exit()
+      
     }
    })
   }   
@@ -204,8 +205,6 @@ const Employeestuff = () => {
     .then ((response)=>{
 
       
-    
-      
       // inquirer.prompt([
       //   { 
       //     type: "list",
@@ -259,6 +258,18 @@ const Employeestuff = () => {
 
 
 MainMenu = () => {return questions()};
+exit =() => {connect.end()}
 questions()
+// function exit({
+// figlet ('Welcome Employee', (err, data) => {
+//   if (error) {
+//       console.log('Something went wrong...');
+//       console.dir(error);
+//       return;
+//   }
+//   console.log(data)
+// });
+departmentlist = () => {departChoice()};
 
+// })
 

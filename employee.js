@@ -24,6 +24,10 @@ function getAllDepartments() {
   connect.query("select * from department", function (err, res) {
     if (err) throw err;
     console.table(res);
+    // var deResult = res
+    //  var departChoice = deResult.map((seeDEP)=>{
+    //   return seeDEP.name
+    //  }) 
     MainMenu ()
   });
 }
@@ -42,9 +46,6 @@ function getAllEmployee() {
   });
 }
 
-// getAllRoles();
-// getAllEmployee();
-// getAllDepartments();
 
  const questions = function (){
    inquirer
@@ -90,13 +91,35 @@ function getAllEmployee() {
   connect.query("SELECT *FROM department", function (err, res){
     if (err) throw err
     var deResult = res
-     var deChoice = deResult.map((seeDEP)=>{
-      return seeDEP.
+     var departChoice = deResult.map((seeDEP)=>{
+      return seeDEP.name
      
-    })  
-  })
- 
-    
+     }) 
+     inquirer
+     .prompt([
+   
+         { 
+         type: "input",
+         name: "addname",
+         message: "Who are you adding?",
+         
+        },
+        { 
+         type: "list",
+         name: "adddepartment",
+         message: "What department are they in?",
+         choices: departChoice
+       },
+        { 
+         type: "input",
+         name: "addrole",
+         message: "What is their Role?",
+         choices: ["Customer Service","Computer Tech"]
+         },
+      
+     ])
+   })
+  
   inquirer
   .prompt([
 
@@ -110,7 +133,7 @@ function getAllEmployee() {
       type: "list",
       name: "adddepartment",
       message: "What department are they in?",
-      choices: seeDEP
+      choices: departChoice
     },
      { 
       type: "input",
@@ -118,18 +141,17 @@ function getAllEmployee() {
       message: "What is their Role?",
       choices: ["Customer Service","Computer Tech"]
       },
-    
+   
+  ])
+//.then ((response)=>{
+//     const employee= new employee(
+//       response.addname,
+//       response.adddepartment,
+//       response.addrole
+//     ) 
+//     employee.push(employee)
 
-
-  ]).then ((response)=>{
-    const employee= new employee(
-      response.addname,
-      response.adddepartment,
-      response.addrole
-    ) 
-    employee.push(employee)
-
- })
+//  })
  }
 
  const Viewstuff = () => {
@@ -222,20 +244,18 @@ const Employeestuff = () => {
       
      
 
-//  const Deletestuff = () => {
+ const Deletestuff = () => {
 
-//   inquirer.prompt([
+  inquirer.prompt([
 
-//     { 
-//       type: "input",
-//       name: "deletethings",
-//       message: "What would you like to delete?",
-//       choices:["Department", "Role", "Employee","Nothing" ]
-//      },
-//   ])
-//  }
-
-//    getAllEmployee
+    { 
+      type: "input",
+      name: "deletethings",
+      message: "What would you like to delete?",
+      choices:["Department", "Role", "Employee","Nothing" ]
+     },
+  ])
+ }
 
 
 MainMenu = () => {return questions()};

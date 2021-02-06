@@ -7,7 +7,7 @@ const figlet = require("figlet")
 connect.connect((error)=>{
   if (error) throw error;
   // console.log ("yay it work"+ connect.threadId)
-  connect.end();
+  // connect.end();
 })
 
 // figlet('Employee Management', function(err, data) {
@@ -23,25 +23,25 @@ connect.connect((error)=>{
 function getAllDepartments() {
   connect.query("select * from department", function (err, res) {
     if (err) throw err;
-    // console.table(res);
+    console.table(res);
   });
 }
 function getAllRoles() {
   connect.query("select * from role", function (err, res) {
     if (err) throw err;
-    // console.table(res);
+     console.table(res);
   });
 }
 function getAllEmployee() {
   connect.query("select * from employee", function (err, res) {
     if (err) throw err;
-    // console.table(res);
+     console.table(res);
   });
 }
 
-getAllRoles();
-getAllEmployee();
-getAllDepartments();
+// getAllRoles();
+// getAllEmployee();
+// getAllDepartments();
 
  const questions = function (){
    inquirer
@@ -51,7 +51,7 @@ getAllDepartments();
     type: "list",
     name: "yourchoice",
     message: "What would you like to do?",
-    choices:["Add", "View", "Update","Delete"]
+    choices:["Add", "View", "Edit Employee","Delete"]
     },
    ])
 
@@ -65,14 +65,16 @@ getAllDepartments();
         case "View" :
           
         return Viewstuff()
-          
-        case "Update" :
-
-          return Updatestuff()
-
+         
         case "Delete" :
 
-          return Deletestuff()
+        return Deletestuff()
+
+        case "Edit Employee" :
+
+        return Employeestuff()
+
+
     }
    })
   }   
@@ -88,15 +90,18 @@ getAllDepartments();
       
      },
      { 
-      type: "input",
+      type: "list",
       name: "adddepartment",
       message: "What department are they in?",
+      choices: ["HR","Sales","IT"]
       
      },
      { 
       type: "input",
       name: "addrole",
       message: "What is their Role?",
+      choices: ["Customer Service","Computer Tech"]
+
       },
 
   ]).then ((response)=>{
@@ -123,45 +128,73 @@ getAllDepartments();
 
     switch (response.viewthings) {
 
-      case Department :
-        return getAllDepartments
+      case "Department":
+        return getAllDepartments()
 
-        case Role :
-        return getAllRoles 
+        case "Role" :
+        return getAllRoles ()
 
-        case Employee :
-          return getAllEmployee
+        case "Employee" :
+          return getAllEmployee ()
 
-        case Nothing :
-        return Exit
+        case "Nothing" :
+        return Exit ()
     }
   })
  }
 
- const Updatestuff = () => {
+// const Employeestuff = () => {
+//   connect.query("SELECT *FROM employee", function (err, res){
+//     if (err) throw err
+//     return res
+    
+//   })
 
-  inquirer.prompt([
-    { 
-      type: "list",
-      name: "updatethings",
-      message: "What would you like to update?",
-      choices:["Department", "Role", "Employee","Nothing" ]
-     },
-  ])
- }
- const Deletestuff = () => {
+//     inquirer.prompt([
+//       { 
+//         type: "list",
+//         name: "viewthings",
+//         message: "Who would you like to edit?",
+//         choices: res
+//       },
+//     ])
+//     .then ((response)=>({
+      
+//       inquirer.prompt([
+//         { 
+//           type: "list",
+//           name: "viewthings",
+//           message: "Which do you want edit?",
+//           choices:["Department","Roles"]
+//          },
+//       ])
 
-  inquirer.prompt([
 
-    { 
-      type: "input",
-      name: "deletethings",
-      message: "What would you like to delete?",
-      choices:["Department", "Role", "Employee","Nothing" ]
-     },
-  ])
- }
-  const exit =() => {return questions}
+//     })
+    
+//    }
+  
+
+
+
+
+// //  const Deletestuff = () => {
+
+// //   inquirer.prompt([
+
+// //     { 
+// //       type: "input",
+// //       name: "deletethings",
+// //       message: "What would you like to delete?",
+// //       choices:["Department", "Role", "Employee","Nothing" ]
+// //      },
+// //   ])
+// //  }
+
+//    getAllEmployee
+
+
+//   // const exit =() => {return questions}
 questions()
 
 

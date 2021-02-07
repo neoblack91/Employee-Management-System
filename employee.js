@@ -11,7 +11,7 @@ connect.connect((error) => {
 });
 
 // figlet('Welcome Employee', function(err, data) {
-//   if (errot) {
+//   if (error) {
 //       console.log('Something went wrong...');
 //       console.dir(error);
 //       return;
@@ -67,6 +67,7 @@ const questions = function () {
     });
 };
 
+
 const Addstuff = () => {
   connect.query("SELECT *FROM department", function (err, res) {
     if (err) throw err;
@@ -95,25 +96,7 @@ const Addstuff = () => {
     ]);
   });
 
-  inquirer.prompt([
-    {
-      type: "input",
-      name: "addname",
-      message: "Who are you adding?",
-    },
-    {
-      type: "list",
-      name: "adddepartment",
-      message: "What department are they in?",
-      choices: departChoice,
-    },
-    {
-      type: "input",
-      name: "addrole",
-      message: "What is their Role?",
-      choices: ["Customer Service", "Computer Tech"],
-    },
-  ]);
+  
   //.then ((response)=>{
   //     const employee= new employee(
   //       response.addname,
@@ -158,7 +141,7 @@ const Employeestuff = () => {
     if (err) throw err;
     var employResult = res;
     var employChoice = employResult.map((seeEmploy) => {
-      return seeEmploy.first_name;
+      return seeEmploy.first_name 
     });
 
     inquirer
@@ -170,26 +153,19 @@ const Employeestuff = () => {
           choices: employChoice,
         },
       ])
-      .then((response) => {
-        // inquirer.prompt([
-        //   {
-        //     type: "list",
-        //     name: "viewthings",
-        //     message: "Which do you want edit?",
-        //     choices:["Department","Roles"]
-        //    },
-        // ])
-      });
+      // .then((response) => {
+      //   // inquirer.prompt([
+      //   //   {
+      //   //     type: "list",
+      //   //     name: "viewthings",
+      //   //     message: "Which do you want edit?",
+      //   //     choices:["Department","Roles"]
+      //   //    },
+      //   // ])
+      // });
   });
 };
 
-// function confirmString(input) {
-
-//   if ((input.trim() != "") && (input.trim().length <= 30)) {
-//       return true;
-//   }
-//   return "Invalid input. Please limit your input to 30 characters or less."
-// };
 
 const DepartmentStuff = () => {
   inquirer
@@ -226,10 +202,19 @@ MainMenu = () => {
 };
 
 exit = () => {
+
+  figlet('Goodbye', function(err, data) {
+    if (e) {
+        console.log('Something went wrong...');
+        console.dir(error);
+        return;
+    }
+    console.log(data)
+  });
   connect.end();
 };
 
-questions();
+
 function getAllDepartments() {
   connect.query("select * from department", function (err, res) {
     if (err) throw err;
@@ -257,19 +242,17 @@ function getAllEmployee() {
   });
 }
 
+function confirmString(input) {
+
+  if ((input.trim() != "") && (input.trim().length <= 30)) {
+      return true;
+  }
+  return "Invalid input. Please limit your input to 30 characters or less."
+};
 
 // add function for global questions
 
-
-// function exit({
-// figlet ('Welcome Employee', (err, data) => {
-//   if (error) {
-//       console.log('Something went wrong...');
-//       console.dir(error);
-//       return;
-//   }
-//   console.log(data)
-// });
 // departmentlist = () => {departChoice()};
 
 // })
+questions();

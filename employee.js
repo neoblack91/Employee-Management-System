@@ -36,8 +36,8 @@ const questions = function () {
         choices: [
           "Add",
           "View",
-          "Edit Employee",
-          "Add Department",
+          "Edit Employee department",
+          "Edit Employee role",
           "Delete",
           "Exit",
         ],
@@ -55,57 +55,48 @@ const questions = function () {
         case "Delete":
           return Deletestuff();
 
-        case "Edit Employee":
-          return Employeestuff();
+        case "Edit Employee department":
+          return editDepartment();
 
-        case "Add Department":
-          return DepartmentStuff();
+        case "Edit Employee role":
+          return editRole();
 
+        
         default:
           return exit();
       }
     });
 };
 
-
 const Addstuff = () => {
-  connect.query("SELECT *FROM department", function (err, res) {
-    if (err) throw err;
-    var deResult = res;
-    var departChoice = deResult.map((seeDEP) => {
-      return seeDEP.name;
-    });
-    inquirer.prompt([
-      {
-        type: "input",
-        name: "addname",
-        message: "Who are you adding?",
-      },
-      {
-        type: "list",
-        name: "adddepartment",
-        message: "What department are they in?",
-        choices: departChoice,
-      },
-      {
-        type: "input",
-        name: "addrole",
-        message: "What is their Role?",
-        choices: ["Customer Service", "Computer Tech"],
-      },
-    ]);
-  });
 
-  
-  //.then ((response)=>{
-  //     const employee= new employee(
-  //       response.addname,
-  //       response.adddepartment,
-  //       response.addrole
-  //     )
-  //     employee.push(employee)
+   inquirer.prompt([
+     {
+      type: "list",
+      name: "addstuff",
+      message: "What do you like to add?",
+      choices: ["Add a employee", "Add a department", "Add a role", "Main Menu"]
+    }
+   ]).then((response)=>{
+    switch (response.addstuff) {
+      case "Add a employee":
+        return addEmployee()
+        
+        case "Add a department":
+        return departmentStuff()
+        
 
-  //  })
+        case "Add a role" :
+        return roleStuff()
+
+      default: 
+
+       MainMenu()
+        
+    }
+
+   })
+    
 };
 
 const Viewstuff = () => {
@@ -136,12 +127,52 @@ const Viewstuff = () => {
     });
 };
 
-const Employeestuff = () => {
-  connect.query("SELECT *FROM employee", function (err, res) {
+const editDepartment = () => {
+  var employees;
+  var departments;
+
+  connect.query("SELECT * FROM employee", function (err, res) {
     if (err) throw err;
     var employResult = res;
-    var employChoice = employResult.map((seeEmploy) => {
-      return seeEmploy.first_name 
+
+    employees = employResult.map((seeEmploy) => {
+      return seeEmploy.first_name + " " + seeEmploy.last_name, seeEmploy.id;
+    });
+  });
+
+  connect.query("SELECT * FROM department", function (err, res) {
+    if (err) throw err;
+    var employResult = res;
+
+    departments = employResult.map((seeEmploy) => {
+      return seeEmploy.first_name + " " + seeEmploy.last_name;
+    });
+  });
+
+  inquirer.prompt([
+    {
+      type: "list",
+      name: "employeethings",
+      message: "Who would you like to edit?",
+      choices: employees,
+    },
+  ]).then;
+  inquirer.prompt([
+    {
+      type: "list",
+      name: "employeethings",
+      message: "Which department you want to assign to this employee?",
+      choices: departments,
+    },
+  ]);
+};
+
+const editRole = () => {
+  connect.query("SELECT *FROM employee", function (err, res) {
+    if (err) throw err;
+    var employroResult = res;
+    var employroChoice = employroResult.map((seeEmploy) => {
+      return seeEmploy.first_name;
     });
 
     inquirer
@@ -150,31 +181,21 @@ const Employeestuff = () => {
           type: "list",
           name: "employeethings",
           message: "Who would you like to edit?",
-          choices: employChoice,
+          choices: employroChoice,
         },
       ])
-      // .then((response) => {
-      //   // inquirer.prompt([
-      //   //   {
-      //   //     type: "list",
-      //   //     name: "viewthings",
-      //   //     message: "Which do you want edit?",
-      //   //     choices:["Department","Roles"]
-      //   //    },
-      //   // ])
-      // });
-  });
-};
+     
+})
+}
 
-
-const DepartmentStuff = () => {
+const departmentStuff = () => {
   inquirer
     .prompt([
       {
         type: "input",
         name: "departName",
         message: "Enter new department:",
-        // validate: confirmString
+        validate: confirmString,
       },
     ])
     .then((response) => {
@@ -182,6 +203,25 @@ const DepartmentStuff = () => {
         response.departName,
       ]);
       console.log(`${response.departName} was added to departments.`);
+      MainMenu();
+    });
+};
+
+const roleStuff = () => {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "roleName",
+        message: "Enter new department:",
+        validate: confirmString,
+      },
+    ])
+    .then((response) => {
+      connect.query("INSERT INTO role(name) VALUES (?)", [
+        response.roleName,
+      ]);
+      console.log(`${response.roleName} was added to roles.`);
       MainMenu();
     });
 };
@@ -195,23 +235,6 @@ const Deletestuff = () => {
       choices: ["Department", "Role", "Employee", "Nothing"],
     },
   ]);
-};
-
-MainMenu = () => {
-  return questions();
-};
-
-exit = () => {
-
-  figlet('Goodbye', function(err, data) {
-    if (e) {
-        console.log('Something went wrong...');
-        console.dir(error);
-        return;
-    }
-    console.log(data)
-  });
-  connect.end();
 };
 
 
@@ -228,14 +251,18 @@ function getAllDepartments() {
 }
 
 function getAllRoles() {
-  connect.query("select * from role", function (err, res) {
+
+  connect.query(`SELECT role.id, title, salary, department.name AS department
+    FROM role INNER JOIN department ON role.department_id = department.id;`, function (err, res) {
     if (err) throw err;
     console.table(res);
+    MainMenu();
   });
-  MainMenu();
+  
 }
 function getAllEmployee() {
-  connect.query("select * from employee", function (err, res) {
+  connect.query(`SELECT e.id, CONCAT(e.first_name, " ", e.last_name) AS employee, role.title, department.name AS department, salary, CONCAT(m.first_name, " ", m.last_name) AS manager
+  FROM employee e INNER JOIN role ON e.role_id=role.id INNER JOIN department on role.department_id=department.id LEFT JOIN employee m ON m.id=e.manager_id`, function (err, res) {
     if (err) throw err;
     console.table(res);
     MainMenu();
@@ -243,11 +270,26 @@ function getAllEmployee() {
 }
 
 function confirmString(input) {
-
-  if ((input.trim() != "") && (input.trim().length <= 30)) {
-      return true;
+  if (input.trim() != "" && input.trim().length <= 30) {
+    return true;
   }
-  return "Invalid input. Please limit your input to 30 characters or less."
+  return "Invalid input. Please limit your input to 30 characters or less.";
+}
+
+MainMenu = () => {
+  return questions();
+};
+
+exit = () => {
+  figlet("Goodbye", function (e, data) {
+    if (e) {
+      console.log("Something went wrong...");
+      console.dir(error);
+      return;
+    }
+    console.log(data);
+  });
+  connect.end();
 };
 
 // add function for global questions
@@ -256,3 +298,53 @@ function confirmString(input) {
 
 // })
 questions();
+const addEmployee= ()=>{
+  var departChoice
+var roleChoice
+connect.query("SELECT *FROM department", function (err, res) {
+  if (err) throw err;
+  var deResult = res;
+  departChoice = deResult.map((seeDEP) => {
+    return seeDEP.name;
+  });
+
+  connect.query(`SELECT role.id, title, salary, department.name AS department
+  FROM role INNER JOIN department ON role.department_id = department.id;`, function (err, res) {
+  if (err) throw err;
+  var roleResult = res;
+   roleChoice = roleResult.map((seerol) => {
+    return seerol.name;
+  });
+});
+  inquirer.prompt([
+    {
+      type: "input",
+      name: "addname",
+      message: "Who are you adding?",
+    },
+    {
+      type: "list",
+      name: "adddepartment",
+      message: "What department are they in?",
+      choices: departChoice,
+    },
+    {
+      type: "list",
+      name: "addrole",
+      message: "What is their Role?",
+      choices: roleChoice,
+    },
+  ]);
+});
+}
+
+
+// //.then ((response)=>{
+// //     const employee= new employee(
+// //       response.addname,
+// //       response.adddepartment,
+// //       response.addrole
+// //     )
+// //     employee.push(employee)
+
+// //  })

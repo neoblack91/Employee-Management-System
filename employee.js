@@ -268,14 +268,76 @@ const roleStuff = () => {
 };
 
 const Deletestuff = () => {
-  inquirer.prompt([
-    {
-      type: "input",
-      name: "deletethings",
-      message: "What would you like to delete?",
-      choices: ["Department", "Role", "Employee", "Nothing"],
-    },
-  ]);
+  var depart;
+  var role;
+  connect.query("SELECT *FROM department", function (err, res) {
+    if (err) throw err;
+    var deResult = res;
+    depart = deResult.map((seeDEP) => {
+      return seeDEP.name;
+    });
+
+    connect.query(
+      `SELECT role.id, title, salary, department.name AS department
+  FROM role INNER JOIN department ON role.department_id = department.id;`,
+      function (err, res) {
+        if (err) throw err;
+        var roleResult = res;
+        role = roleResult.map((seerol) => {
+          return seerol.title;
+        });
+
+        inquirer
+          .prompt([
+            {
+              type: "list",
+              name: "deletethings",
+              message: "What would you like to delete?",
+              choices: ["Department", "Role", "Employee", "Nothing"],
+            },
+          ])
+          .then((response) => {
+            switch (response.Deletethings) {
+              case "Department":
+                inquirer.prompt([
+                  {
+                    type: "list",
+                    name: "deletethings",
+                    message: "What department do you want to delete?",
+                    choices: depart,
+                  },
+                ]);
+                break;
+              case "Role":
+                inquirer.prompt([
+                  {
+                    type: "list",
+                    name: "deletethings",
+                    message: "What role do you want to delete?",
+                    choices: role,
+                  },
+                ]);
+                break;
+
+              // case "Employee":
+              //   inquirer.prompt([
+              //     {
+              //       type: "list",
+              //       name: "deletethings",
+              //       message: "What would you like to delete?",
+              //       choices: [""],
+              //     },
+              //   ])
+              // break;
+
+              default:
+                MainMenu();
+                break;
+            }
+          });
+      }
+    );
+  });
 };
 
 function getAllDepartments() {
@@ -367,32 +429,40 @@ const addEmployee = () => {
           .prompt([
             {
               type: "input",
-              name: "addfirst",
+              name: "first",
               message: "What is their first name?",
             },
             {
               type: "input",
-              name: "addlast",
+              name: "last",
               message: "What is their last name?",
             },
             {
               type: "list",
-              name: "addepartment",
+              name: "department",
               message: "What department are they in?",
               choices: departChoice,
             },
             {
-              type: "list",
-              name: "addrole",
+              type: "rawlist",
+              name: "role",
               message: "What is their Role?",
               choices: roleChoice,
             },
+            {
+              type: "rawlist",
+              name: "role",
+              message: "Who is the manager?",
+              choices: employeeNames,
+            },
           ])
-          .then((response)=>{
-
-            
-          }
+          .then((response) => {
+            connect.query(
+              `INSERT INTO employee("first_name", "last_name", "role_id",) VALUES ("${response.first}", "${response.last}",${response.role} (SELECT id FROM department WHERE name = "${response.department}"))`
+            );
+          });
       }
     );
   });
 };
+

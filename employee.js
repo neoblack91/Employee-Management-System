@@ -10,14 +10,20 @@ connect.connect((error) => {
   // connect.end();
 });
 
-// figlet('Welcome Employee', function(err, data) {
-//   if (error) {
-//       console.log('Something went wrong...');
-//       console.dir(error);
-//       return;
-//   }
-//   console.log(data)
-// });
+const init = ()=> {
+
+  figlet('Welcome Employee', function(err, data) {
+    if (err) {
+        console.log('Something went wrong...');
+        console.dir(err);
+        return;
+    }
+    console.log(data)
+  })
+
+
+}
+
 //add function for global connect
 
 //start npm with table
@@ -25,8 +31,16 @@ connect.connect((error) => {
 // connection to the table
 
 //init function
-
+// figlet('Welcome Employee', function(err, data) {
+//   if (error) {
+//       console.log('Something went wrong...');
+//       console.dir(error);
+//       return;
+//   }
+//   console.log(data)
+// })
 const questions = function () {
+  
   inquirer
     .prompt([
       {
@@ -554,3 +568,4 @@ const deleteRole = () => {
     }
   );
 };
+init()

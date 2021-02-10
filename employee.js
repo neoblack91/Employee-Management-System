@@ -88,10 +88,10 @@ const Addstuff = () => {
           return addEmployee();
 
         case "Add a department":
-          return departmentStuff();
+          return addDepartment();
 
         case "Add a role":
-          return roleStuff();
+          return addRole();
 
         default:
           MainMenu();
@@ -209,7 +209,7 @@ const editRole = () => {
   });
 };
 
-const departmentStuff = () => {
+const addDepartment = () => {
   inquirer
     .prompt([
       {
@@ -228,7 +228,7 @@ const departmentStuff = () => {
     });
 };
 
-const roleStuff = () => {
+const addRole = () => {
   connect.query("SELECT * FROM department", function (err, res) {
     if (err) throw err;
     console.log(" ");
@@ -449,20 +449,22 @@ const addEmployee = () => {
               message: "What is their Role?",
               choices: roleChoice,
             },
-            {
-              type: "rawlist",
-              name: "role",
-              message: "Who is the manager?",
-              choices: employeeNames,
-            },
+            // {
+            //   type: "rawlist",
+            //   name: "role",
+            //   message: "Who is the manager?",
+            //   choices: employeeNames,
+            // },
           ])
           .then((response) => {
-            connect.query(
-              `INSERT INTO employee("first_name", "last_name", "role_id",) VALUES ("${response.first}", "${response.last}",${response.role} (SELECT id FROM department WHERE name = "${response.department}"))`
-            );
+            connect.query("INSERT INTO employee", {
+              first_name: response.first,
+              last_name: response.last,
+              department_id: response.department,
+              role_id: response.role,
+            });
           });
       }
     );
   });
 };
-

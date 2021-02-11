@@ -437,11 +437,12 @@ const addEmployee = () => {
               type: "rawlist",
               name: "manager",
               message: "Who is the manager?",
-              choices: "",
-            },
+              choices: ("manager1", "manager 2", "manager3"),
+            }
+            
           ])
           .then((response) => {
-            connect.query(
+            connect.log(
               `INSERT INTO employee (first_name,last_name,role_id department_id) VALUES ("${response.first}","${response.last}","${response.department}","${response.role}",) `,
               {}
             );

@@ -405,10 +405,9 @@ const addEmployee = () => {
             if (err) throw err;
             var manResult = res;
             manChoice = manResult.map((seeman) => {
-              return seeman.first_name;
+              return (seeman.first_name +" "+ seeman.last_name) ;
             });
-          }
-        );
+          
         inquirer
           .prompt([
             {
@@ -437,16 +436,17 @@ const addEmployee = () => {
               type: "rawlist",
               name: "manager",
               message: "Who is the manager?",
-              choices: ("manager1", "manager 2", "manager3"),
+              choices: manChoice,
             }
             
           ])
           .then((response) => {
-            connect.log(
-              `INSERT INTO employee (first_name,last_name,role_id department_id) VALUES ("${response.first}","${response.last}","${response.department}","${response.role}",) `,
+            connect.query(
+              `INSERT INTO employee (first_name,last_name,role_id, manager_id) VALUES ("${response.first}","${response.last}","${response.role}","${response.manager}",) `,
               {}
             );
           });
+        });
       }
     );
   });
